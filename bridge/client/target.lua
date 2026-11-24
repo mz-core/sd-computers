@@ -1,4 +1,5 @@
 ---@type table Client target bridge exposing zone/entity registration helpers and the active system name.
+if GetResourceState('mz_sd_bridge') == 'started' then return require 'bridge.client.mz_bridge' end
 local target = {}
 
 ---@type table Tagged debug logger for this file (bridge.shared.debug).

@@ -65,6 +65,9 @@ end
 ---@return boolean
 function job.has(source, jobName, minGrade)
     minGrade = minGrade or 0
+    if framework.name == 'mz' then
+        return exports.mz_sd_bridge:HasGroup(source, jobName, minGrade)
+    end
     dprint('has: src=%s jobName=%s minGrade=%d', tostring(source), tostring(jobName), minGrade)
     local p = player_mod.get(source)
     if not p then

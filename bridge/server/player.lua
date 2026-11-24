@@ -12,6 +12,11 @@ dprint('module load — framework: %s', tostring(framework.name))
 ---Picks the framework's GetPlayer implementation at module load.
 ---@return fun(source: number): any|nil
 local function chooseGet()
+    if framework.name == 'mz' then
+        return function(src)
+            return exports.mz_sd_bridge:GetPlayer(src)
+        end
+    end
     if framework.name == 'qb' then
         dprint('chooseGet: selected QBCore (Functions.GetPlayer)')
         return function(src)
@@ -47,6 +52,7 @@ function player.get(source) return resolveGet(source) end
 ---Picks the framework's "extract identifier from player object" call at module load.
 ---@return fun(p: any): string|nil
 local function chooseIdentifier()
+    if framework.name == 'mz' then return function(p) return p.citizenid end end
     if framework.name == 'qb' then
         dprint('chooseIdentifier: selected QBCore (PlayerData.citizenid)')
         return function(p) return p.PlayerData.citizenid end
@@ -84,6 +90,11 @@ function player.getName(source)
     if not p then
         dprint('getName: player not found for src=%s — returning Unknown', tostring(source))
         return 'Unknown'
+    end
+
+    if framework.name == 'mz' then
+        local info = p.charinfo or {}
+        return ('%s %s'):format(info.firstname or '', info.lastname or '')
     end
 
     if framework.name == 'esx'  then
@@ -148,6 +159,10 @@ end
 ---multiple registrations are fine, each gets its own handler.
 ---@param cb fun(source: number)
 function player.onLoaded(cb)
+    if framework.name == 'mz' then
+        AddEventHandler('mz_core:server:playerLoaded', function(src) cb(src) end)
+        return
+    end
     if framework.name == 'qb' then
         dprint('onLoaded: registering QBCore:Server:OnPlayerLoaded handler')
         RegisterNetEvent('QBCore:Server:OnPlayerLoaded', function()

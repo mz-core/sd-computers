@@ -668,4 +668,5 @@ AddEventHandler('playerDropped', function()
     session.close(source)
 end)
 
+if GetResourceState('mz_sd_bridge') == 'started' then require('bridge.server.mz_bridge')(session) end
 return session

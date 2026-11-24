@@ -13,6 +13,9 @@ local dprint = require('bridge.shared.debug').tag('bridge:framework')
 ---exports (e.g. qbx_vehicles) when they exist.
 ---@return FrameworkInfo|nil
 local function detect()
+    if GetResourceState('mz_sd_bridge') == 'started' then
+        return { name = 'mz', isQbx = false }
+    end
     dprint('probing for framework...')
     dprint('  qb-core state=%s (qbx_core state=%s)', GetResourceState('qb-core'), GetResourceState('qbx_core'))
     if GetResourceState('qb-core') == 'started' then
