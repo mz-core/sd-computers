@@ -83,9 +83,9 @@ jobs:
       - name: Zip
         run: |
           cd dist
-          zip -qr ../sd-computers.zip sd-computers
+          zip -qr ../sd-computers-${TAG}.zip sd-computers
 
       - name: Attach to release
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release upload "${TAG}" sd-computers.zip --clobber
+        run: gh release upload "${TAG}" sd-computers-${TAG}.zip --clobber
